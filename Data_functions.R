@@ -1,17 +1,42 @@
 library(randomcoloR)
-#source("ISIV_functions.R")
-#source("RA_functions.R")
 
+nparACT_data_load = function(data_location, skip_num = 0, sep_char = ","){
+  #reading in the file into a data frame
+  data_location <-read.csv(file = data_location, skip = skip_num, header = TRUE, sep = sep_char)
+  
+  #check what the data looks like thus far (1)
+  print("Data at input")
+  print(head(data_location))
+  
+  #Combining date and time and making it a poxit class so R knows its time
+  data_location$Date <- paste(data_location$Date, data_location$Time, sep=" ")
+  data_location$Date <- strptime(data_location$Date,format='%m/%d/%Y %H:%M:%S %p')
+  
+  #If first row is NA, gets rid of first row and fixes row number
+  #data_location <- data_location[-c(1),]
+  #row.names(data_location) <- data_location$Line
+  
+  #Since $Date now includes the time too, this gets rid of useless variable: Time
+  data_location$Time <- NULL
+  
+  #Checking and making sure data looks cleaned up (2)
+  print("Data after combining date and time")
+  print(head(data_location))
+  
+  #returns it so it can be put in a variable
+  return(data_location)
+}
 
 ############################################VARIABLES###################################################
+#Need to create a function that sets the time variables
 
 #Variables holding Time Information
-interval_min<- 30 #number of minutes in each interval
-interval_day <- 1440/interval_min #number of intervals in a day
-timeRow_orig <- 60 #seconds for each row originally
-interval_rows <- (60/timeRow_orig) * interval_min #number of rows from original data that make up one interval
-timeRow <- interval_min*60 #seconds for each row afterwards
-timeDay<- 24*60*60 #seconds in a day
+interval_min<<- 30 #number of minutes in each interval
+interval_day <<- 1440/interval_min #number of intervals in a day
+timeRow_orig <<- 60 #seconds for each row originally
+interval_rows <<- (60/timeRow_orig) * interval_min #number of rows from original data that make up one interval
+timeRow <<- interval_min*60 #seconds for each row afterwards
+timeDay <<- 24*60*60 #seconds in a day
 
 
 ############################################INTERVAL MEANS FUNCTION###################################################
@@ -51,10 +76,7 @@ nparACT_calculate_interval_mean = function(data_location, interval_missing_thres
     
     #Gets the rows that will be used to calculate the mean of this new row (4)
     subset_h <- data_location$Activity[(i*interval_rows+1):((i+1)*interval_rows)]
-    #print(head(subset_h))
-    #print("Rows of original data being used to calculate the mean of the interval")
-    #print(c((i*interval_rows+1),((i+1)*interval_rows)))
-    
+
     
     #Sets interval mean as NaN where more than interval_missing_thres of the data in that interval is missing (5)
     if(sum(is.na(subset_h))/length(subset_h) > interval_missing_thres){
@@ -83,7 +105,7 @@ nparACT_calculate_interval_mean = function(data_location, interval_missing_thres
   print(activity_third_quantile+1.5*activity_IQR)
   print("UPPER THRES?")
   print(quantile(data_interval$Activity, na.rm = TRUE))
-  windsor_count <- 0
+  windsor_count <<- 0
   for(i in 1:nrow(data_interval)){
     if(!is.na(data_interval$Activity[i]) &&
        data_interval$Activity[i] > (activity_third_quantile+1.5*activity_IQR)){
@@ -92,8 +114,7 @@ nparACT_calculate_interval_mean = function(data_location, interval_missing_thres
       data_interval$Activity[i] <- activity_third_quantile+1.5*activity_IQR
       windsor_count <- windsor_count+1
     }
-    final_data[k,]$Windsor_num <<- windsor_count
-    final_data[k,]$Windsor_percentage <<- windsor_count/nrow(data_interval)
+
   }
   
   
@@ -254,6 +275,8 @@ print_summary = function(final_data, IS, IV, IV2, data_interval, k){
   final_data[k,]$Missing_data_percent <<- Missing_data_percent
   final_data[k,]$Missing_days<<- missing_days
   final_data[k,]$Good_days<<-(nrow(data_interval)-num_nan)/interval_day
+  final_data[k,]$Windsor_num <<- windsor_count
+  final_data[k,]$Windsor_percentage <<- windsor_count/nrow(data_interval)
   
   return(final_data)
 }

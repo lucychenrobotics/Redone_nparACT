@@ -1,6 +1,5 @@
 library(randomcoloR)
-#source("RA_functions.R")
-#source("Data_functions.R")
+
 
 ############################################IV FUNCTION###################################################
 
@@ -198,7 +197,9 @@ nparACT_IS = function(data_interval, mean_all){
   for (h in 1:interval_day){ 
     
     #s is the number of days there are
-    s <- floor(nrow(data_interval)/interval_day) 
+    s <- ceiling(nrow(data_interval)/interval_day) 
+    print(s)
+    print("THIS IS THE NUM OF DAYS THERE ARE")
     
     
     #Creating another variable so as not to mess up the original through aliasing and such
@@ -229,7 +230,7 @@ nparACT_IS = function(data_interval, mean_all){
   
   x_label <- paste("Intervals (", interval_min, " Min) since", strftime(data_interval[1,]$Date, format="%H:%M:%S %p"))
 
-  #plot(hourly_means, main = "Overall means for each hour, showing 24 hours", xlab = x_label, ylab = "Activity Count")
+  plot(hourly_means, main = "Overall means for each hour, showing 24 hours", xlab = x_label, ylab = "Activity Count")
 
   print("This is the individual portions of the IS numerator")
   print(head(result_ISnum))

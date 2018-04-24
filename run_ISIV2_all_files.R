@@ -3,8 +3,10 @@
 
 #INCLUDE ALL LIBRARIES HERE
 #library(nparACT)
-setwd("/Users/lucychen/Documents/Lab stuff/Franzen Sarah lab/Code")
+setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Redone_Code")
 source("ISIV_functions.R")
+source("RA_functions.R")
+source("Data_functions.R")
 
 #Additional things that can be added
 #-currently IS cuts off after the last 24 hour period, modify to be able to take into account last day
@@ -15,7 +17,7 @@ source("ISIV_functions.R")
 #Sets up the data
 #1: file name/location (if the path doesn't exist, set your working directory to where the data file is (setwd("")))
 #2: number of lines to skip before you reach where your headings are
-setwd("/Users/lucychen/Documents/Lab stuff/Franzen Sarah lab/Code/Data/franzenlab/25")
+setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Data/franzenlab/26")
 
 files <- list.files(path = getwd(), pattern="*.csv", full.names=T,  recursive=FALSE)
 ID_num <<- 1
@@ -35,7 +37,7 @@ final_data <<- data.frame(ID=character(),
 k <<-1
 lapply(files, function(x) {
 print(x)
-data_location <- nparACT_data_load(x, 25)
+data_location <- nparACT_data_load(x, 26)
 ID_num <- substr(x, 1, 3)
 print(ID_num)
 final_data[k,]$ID <<- x
@@ -76,5 +78,5 @@ k <<- k+1
 rm(list = ls())
 })
 
-write.table(final_data, "final_data_good_days_not_windsorized.csv", row.names=F, sep=",")
+write.table(final_data, "final_data_before_RA_26.csv", row.names=F, sep=",")
 

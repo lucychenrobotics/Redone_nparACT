@@ -3,9 +3,9 @@
 
 #INCLUDE ALL LIBRARIES HERE
 #library(nparACT)
-setwd("/Users/lucychen/Documents/Lab stuff/Franzen Sarah lab/Code/Redone_Code")
+setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Redone_Code")
 source("ISIV_functions.R")
-#source("RA_functions.R")
+source("RA_functions.R")
 source("Data_functions.R")
 
 #Additional things that can be added
@@ -17,8 +17,8 @@ source("Data_functions.R")
 #Sets up the data
 #1: file name/location (if the path doesn't exist, set your working directory to where the data file is (setwd("")))
 #2: number of lines to skip before you reach where your headings are
-setwd("/Users/lucychen/Documents/Lab stuff/Franzen Sarah lab/Code/Data/test")
-data_location <- nparACT_data_load("783_test.csv", 26)
+setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Data/test")
+data_location <- nparACT_data_load("766_test.csv", 25)
 timeOverall <- nrow(data_location)*timeRow_orig
 
 #Gets the means for the interval and gets rid of data with too many missing points
