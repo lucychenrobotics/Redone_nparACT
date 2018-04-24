@@ -1,4 +1,4 @@
-nparACT_L5M10 = function(data, minaverage, a, SR){
+nparACT_L5M10 = function(data_hrs, minaverage, a, SR){
   ## ---- L5 values 
   L5_matrix <- matrix(NA, 1440)
   data_L5_M10 <- rep(minaverage, 2) 

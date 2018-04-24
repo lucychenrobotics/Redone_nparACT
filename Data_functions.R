@@ -12,10 +12,40 @@ nparACT_data_load = function(data_location, skip_num = 0, sep_char = ","){
   data_location$Date <- paste(data_location$Date, data_location$Time, sep=" ")
   data_location$Date <- strptime(data_location$Date,format='%m/%d/%Y %H:%M:%S %p')
   
-  #If first row is NA, gets rid of first row and fixes row number
-  #data_location <- data_location[-c(1),]
-  #row.names(data_location) <- data_location$Line
   
+  
+  #Getting rid of first part of NaN's
+  found_first_num <- FALSE
+  first_num <- 1
+  while(!found_first_num){
+    if(!is.na(data_location[first_num,]$Activity)){
+      found_first_num <- TRUE
+    }
+    else{
+      first_num <- first_num +1
+    }
+  }
+  
+  if(first_num != 1){
+    data_location <- data_location[-seq(1, first_num, by=1),]
+  }
+  
+  #Getting rid of last part of NaN's
+  found_last_num <- FALSE
+  last_num <- nrow(data_location)
+  while(!found_last_num){
+    if(!is.na(data_location[last_num,]$Activity)){
+      found_last_num <- TRUE
+    }
+    else{
+      last_num <- last_num-1
+    }
+  }
+  
+  if(last_num != nrow(data_location)){
+    data_location <- data_location[-seq(last_num, nrow(data_location), by=1),]
+  }
+
   #Since $Date now includes the time too, this gets rid of useless variable: Time
   data_location$Time <- NULL
   
