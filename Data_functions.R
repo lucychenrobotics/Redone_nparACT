@@ -164,13 +164,15 @@ nparACT_calculate_interval_mean = function(data_location, interval_missing_thres
   #print("UPPER THRES?")
   #print(quantile(data_interval$Activity, na.rm = TRUE))
   windsor_count <<- 0
+  print(windsor_count)
+  print("WINDSOR COUNT")
   for(i in 1:nrow(data_interval)){
     if(!is.na(data_interval$Activity[i]) &&
       data_interval$Activity[i] > (activity_third_quantile+1.5*activity_IQR)){
-      #print(data_interval$Activity[i])
-      #print("Getting rid of this")
+      print(data_interval$Activity[i])
+      print("Getting rid of this")
       data_interval$Activity[i] <- activity_third_quantile+1.5*activity_IQR
-      windsor_count <- windsor_count+1
+      windsor_count <<- windsor_count+1
     }
 
   }

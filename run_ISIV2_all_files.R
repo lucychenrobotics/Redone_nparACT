@@ -17,7 +17,7 @@ source("Data_functions.R")
 #Sets up the data
 #1: file name/location (if the path doesn't exist, set your working directory to where the data file is (setwd("")))
 #2: number of lines to skip before you reach where your headings are
-setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Data/franzenlab/26")
+setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Data/franzenlab/25")
 
 files <- list.files(path = getwd(), pattern="*.csv", full.names=T,  recursive=FALSE)
 ID_num <<- 1
@@ -42,7 +42,7 @@ final_data <<- data.frame(ID=character(),
 k <<-1
 lapply(files, function(x) {
 print(x)
-data_location <- nparACT_data_load(x, 26)
+data_location <- nparACT_data_load(x, 25)
 ID_num <- substr(x, 1, 3)
 print(ID_num)
 final_data[k,]$ID <<- x
@@ -88,5 +88,5 @@ k <<- k+1
 rm(list = ls())
 })
 str(final_data)
-write.table(final_data, "final_data_after_RA_26_fixed_time_intervalmissing_aftercleaning.csv", row.names=F, sep=",")
+write.table(final_data, "final_data_after_RA_25_fixed_time_intervalmissing_aftercleaning2.csv", row.names=F, sep=",")
 
