@@ -18,7 +18,7 @@ source("Data_functions.R")
 #1: file name/location (if the path doesn't exist, set your working directory to where the data file is (setwd("")))
 #2: number of lines to skip before you reach where your headings are
 setwd("/Users/lucychen/Documents/Lab/Franzen_Sarah_Lab/Code/Data/test")
-data_location <- nparACT_data_load("766_test.csv", 25)
+data_location <- nparACT_data_load("733_test.csv", 25)
 timeOverall <- nrow(data_location)*timeRow_orig
 
 #Gets the means for the interval and gets rid of data with too many missing points
@@ -32,20 +32,15 @@ plot_ISIV(data_location, data_interval)
 
 #Get mean of entire set using the interval means (8)
 data_interval_entire_mean <- mean(data_interval$Activity, na.rm = TRUE)
-print(data_interval_entire_mean)
-#print(data_interval[1:3,]$Activity)
-print("CHECKING")
-
-#To look at data_interval
-#write.csv(data_interval,'/data_interval.csv')
 
 num_nan <- sum(is.nan(data_interval$Activity))
-print("past here")
+
 #Running IV
 final_IV <- nparACT_IV(nrow(data_interval), data_interval, data_interval_entire_mean)
+final_IV2 <- nparACT_IV2(nrow(data_interval), data_interval, data_interval_entire_mean)
 
 #Running IS
 final_IS <- nparACT_IS(data_interval, data_interval_entire_mean)
+nparACT_L5M10(interval_means,data_interval)
+#_summary(final_IS, final_IV, data_interval)
 
-#print_summary(final_IS, final_IV, data_interval)
- 

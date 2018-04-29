@@ -36,9 +36,6 @@ nparACT_IV = function(n, data_interval, mean_all){
   #Sums the IV and then multiplies it by the number of points (excluding nan)
   IVnum <- sum(result_IVnum, na.rm = T)
   
-
-  print("This is the number of rows not nan")
-  print(nrow(data_interval)-num_nan)
   IVnumerator <- (nrow(data_interval)-num_nan)*IVnum
   
   #This is the IV numerator(10)
@@ -114,17 +111,17 @@ nparACT_IV2 = function(n, data_interval, mean_all){
   }
   
   
-  
   #Results for the first few derivates for the IV numerator(9)
   print("First few derivatives for IV numerator")
   print(head(result_IVnum))
-  
-  #Sums the IV and then multiplies it by the number of points (excluding nan)
+  print(result_IVnum[260:266])
+  #Sums the IV
   IVnum <- sum(result_IVnum, na.rm = T)
   
   
   print("This is the number of rows not nan")
   print(nrow(data_interval)-num_nan)
+  print(sum(!is.na(data_interval$Activity)))
   
   #This is the IV numerator(10)
   print("Final IV numerator which is a sum of the derivatives multiplied by the number of points")
@@ -147,14 +144,16 @@ nparACT_IV2 = function(n, data_interval, mean_all){
   #Results for the first few differences for the IV denominator (11)
   print("First few differences for IV denominator")
   print(head(result_ISdenom))
+  print(tail(result_ISdenom))
   
   #Summing all these differences and multiplying by number of points-1 (excluding nan)
   ISdenom <- sum(result_ISdenom, na.rm = T)
-  print("this is is denom")
-  print(ISdenom)
   
   print("this is new nan for denom")
   print(nrow(result_IVnum)-sum(is.na(result_IVnum)))
+  
+  print("this is new nan for numer")
+  print(nrow(result_ISdenom)-sum(is.na(result_ISdenom)))
   
   IVnumerator <- (nrow(result_ISdenom)-sum(is.na(result_ISdenom)))*IVnum
   
@@ -164,7 +163,7 @@ nparACT_IV2 = function(n, data_interval, mean_all){
   
   
   # ----------------------------
-  IV <- round(IVnumerator/IVdenominator, digits = 2)
+  IV <- round(IVnumerator/IVdenominator, digits = 3)
   #Final IV(12)
   print("This is the final IV")
   print(IV)
@@ -187,7 +186,7 @@ nparACT_IS = function(data_interval, mean_all){
   result_ISnum <- matrix(NA, nrow = interval_day) 
   
   #Creates datafram for holding the means for the hour across the data
-  hourly_means <- matrix(NA, nrow = interval_day) 
+  interval_means <<- matrix(NA, nrow = interval_day) 
   
   
   n <- nrow(data_interval)
@@ -197,9 +196,9 @@ nparACT_IS = function(data_interval, mean_all){
   for (h in 1:interval_day){ 
     
     #s is the number of days there are
-    s <- ceiling(nrow(data_interval)/interval_day) 
-    print(s)
-    print("THIS IS THE NUM OF DAYS THERE ARE")
+    s <- nrow(data_interval)/interval_day
+    #print(s)
+    #print("THIS IS THE NUM OF DAYS THERE ARE")
     
     
     #Creating another variable so as not to mess up the original through aliasing and such
@@ -222,7 +221,7 @@ nparACT_IS = function(data_interval, mean_all){
     
     #Finding the difference between that hour mean for all the days and the mean across all the days/all the times
     hrlymean <- mean(hrlydat, na.rm = T) 
-    hourly_means[h,] <- hrlymean
+    interval_means[h,] <<- hrlymean
     
     x <- (hrlymean-mean_all)^2 
     result_ISnum[h,] <- x
@@ -230,16 +229,11 @@ nparACT_IS = function(data_interval, mean_all){
   
   x_label <- paste("Intervals (", interval_min, " Min) since", strftime(data_interval[1,]$Date, format="%H:%M:%S %p"))
 
-  plot(hourly_means, main = "Overall means for each hour, showing 24 hours", xlab = x_label, ylab = "Activity Count")
+  plot(interval_means, main = "Overall means for each hour, showing 24 hours", xlab = x_label, ylab = "Activity Count")
 
   print("This is the individual portions of the IS numerator")
   print(head(result_ISnum))
-  
-  
-  print("THIS IS THE NUM NAN")
-  #print(num_nan)
-  ISnum <- sum(result_ISnum)  
-  ISnumerator <- (n-num_nan)*ISnum  
+ 
   
   
   ## ---- IS denominator calculation
@@ -248,6 +242,17 @@ nparACT_IS = function(data_interval, mean_all){
     y <- ((data_interval[j,]$Activity-mean_all)^2)
     result_ISdenom[j,] <- y
   }
+  
+  
+  
+ 
+  ISnum <- sum(result_ISnum)  
+  ISnumerator <- (sum(!is.na(result_ISdenom)))*ISnum
+  #print(sum(!is.na(result_ISdenom)))
+  #print(n-num_nan)
+  print("num not is na")
+  
+  
   ISdenom <- sum(result_ISdenom, na.rm = T)   
   ISdenominator <- p*ISdenom  
   ## -----------------------------

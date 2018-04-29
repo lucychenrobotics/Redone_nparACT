@@ -25,6 +25,11 @@ final_data <<- data.frame(ID=character(),
                          IV=double(),
                          IV2=double(),
                          IS=double(), 
+                         L5=double(),
+                         L5_start_time=double(),
+                         M10 = double(),
+                         M10_start_time = double(),
+                         RA = double(),
                          num_nan=integer(), 
                          Missing_data_percent = double(),
                          Missing_days = integer(),
@@ -48,6 +53,8 @@ missing_days<<-0
 #2: Percentage threshold of missing data in an interval that is acceptable
 #3: Percentage threshold of missing intervals in a day that is acceptable
 data_interval <- nparACT_calculate_interval_mean(data_location, .5, .30, k)
+print(head(data_interval))
+print("THIS IS A THING")
 timeOverall <- nrow(data_location)*timeRow_orig
 
 #plot_ISIV(data_location, data_interval)
@@ -68,15 +75,18 @@ final_IV2 <- nparACT_IV2(nrow(data_interval), data_interval, data_interval_entir
 #Running IS
 final_IS <- nparACT_IS(data_interval, data_interval_entire_mean)
 
+L5M10 <- nparACT_L5M10(interval_means, data_interval)
+
+
 
 #final_data<<-
-print_summary(final_data, final_IS, final_IV, final_IV2, data_interval, k)
+print_summary(final_data, final_IS, final_IV, final_IV2, L5M10, data_interval, k)
 #final_data[1,]$IV<-1
 k <<- k+1
 
 #Make sure nothing is a result of workspace
 rm(list = ls())
 })
-
-write.table(final_data, "final_data_before_RA_26.csv", row.names=F, sep=",")
+str(final_data)
+write.table(final_data, "final_data_after_RA_26_fixed_time_intervalmissing_aftercleaning.csv", row.names=F, sep=",")
 
